@@ -46,14 +46,17 @@ password2 = ""
 
 ## Endpoints
 
-| **Endpoint**          | **Method** | **Parameters**                                                      |
+| **Endpoint**          | **Method** | **Parameters**                                                      | **Returns** |
+| --------------------- | ---------- | ------------------------------------------------------------------- | ----------- |
+| `/updateToChipiChipi` | `GET`      | - `crashIt` (boolean): Simulate a crash before committing.          | 200/500     |
+|                       |            | - `stopSql` (boolean): Stop the SQL service during the transaction. |             |
+|                       |            | - `rollIt` (boolean): Rollback the transaction based on conditions. |             |
+| `/updateToDubiDubi`   | `GET`      | - `crashIt` (boolean): Simulate a crash before committing.          | 200/500     |
+|                       |            | - `stopSql` (boolean): Stop the SQL service during the transaction. |             |
+|                       |            | - `rollIt` (boolean): Rollback the transaction based on conditions. |             |
+
+| **Endpoint**          | **Method** | **Returns**                                                      |
 | --------------------- | ---------- | ------------------------------------------------------------------- |
-| `/updateToChipiChipi` | `GET`      | - `crashIt` (boolean): Simulate a crash before committing.          |
-|                       |            | - `stopSql` (boolean): Stop the SQL service during the transaction. |
-|                       |            | - `rollIt` (boolean): Rollback the transaction based on conditions. |
-| `/updateToDubiDubi`   | `GET`      | - `crashIt` (boolean): Simulate a crash before committing.          |
-|                       |            | - `stopSql` (boolean): Stop the SQL service during the transaction. |
-|                       |            | - `rollIt` (boolean): Rollback the transaction based on conditions. |
 | `/getCrash`           | `GET`      | Boolean indicating whether a crash is scheduled.                    |
 | `/stopSql`            | `GET`      | Boolean indicating whether the SQL service was stopped.             |
 
