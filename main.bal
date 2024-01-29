@@ -60,7 +60,7 @@ service / on new http:Listener(9090) {
     // rollIt - forcefully rollback the transaction
     // crashIt - crash the transaction manager before notifyCommit
     // stopSql - stop the sql server before notifyCommit
-    resource function get updateToChipiChipi(boolean crashIt, boolean stopSql, boolean rollIt) returns string|error {
+    resource function get updateToChipiChipi(boolean crashIt = false, boolean stopSql = false, boolean rollIt = false) returns string|error {
         stopSqlServer = stopSql;
         if (!stopSqlServer) {
             _ = check startServ();
@@ -96,7 +96,7 @@ service / on new http:Listener(9090) {
         return "transaction chipi completed";
     }
 
-    resource function get updateToDubiDubi(boolean crashIt, boolean stopSql, boolean rollIt) returns string|error {
+    resource function get updateToDubiDubi(boolean crashIt = false, boolean stopSql = false, boolean rollIt = false) returns string|error {
         stopSqlServer = stopSql;
         if (!stopSqlServer) {
             _ = check startServ();
@@ -213,4 +213,3 @@ isolated function divideByZero() = @java:Method {
     name: "divideByZero",
     'class: "a.b.c.Foo"
 } external;
-
