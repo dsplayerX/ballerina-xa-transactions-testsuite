@@ -73,13 +73,25 @@ service / on new http:Listener(9090) {
         sql:ParameterizedQuery updateQuery2 = `UPDATE xaTesting SET hello = 'chipichipi' WHERE id = ${cellId}`;
 
         io:println("~ Start of transaction block");
-        transaction {
+        retry transaction {
             transaction:onCommit(commitHanlder);
             transaction:onRollback(rollbackHandler);
             sql:ExecutionResult execResult1 = check self.localDB->execute(updateQuery1);
             io:println("Affected row count: ", execResult1.affectedRowCount);
             sql:ExecutionResult execResult2 = check self.dockerDB->execute(updateQuery2);
             io:println("Affected row count: ", execResult2.affectedRowCount);
+
+            // call transaldb from here
+            http:Client httpClient = check new ("http://localhost:9896");
+            http:Response response = check httpClient->get("/hola?name=chipi");
+            if (response.statusCode != 200 && response.statusCode != 202) {
+                io:println("Error: ", response.statusCode, " - ", response.reasonPhrase);
+                io:println("> Rolling back...");
+                rollback;
+                return "transaction chipi failed";
+            } else {
+                io:println("Response: ", response.statusCode, " - ", response.reasonPhrase);
+            }
 
             if (rollIt == true || execResult1.affectedRowCount == 0 || execResult2.affectedRowCount == 0) {
                 io:println("> Rolling back...");
@@ -109,7 +121,7 @@ service / on new http:Listener(9090) {
         sql:ParameterizedQuery updateQuery2 = `UPDATE xaTesting SET hello = 'dubidubi' WHERE id = ${cellId}`;
 
         io:println("~ Start of transaction block");
-        transaction {
+        retry transaction {
             transaction:onCommit(commitHanlder);
             transaction:onRollback(rollbackHandler);
             sql:ExecutionResult execResult1 = check self.localDB->execute(updateQuery1);
@@ -139,6 +151,7 @@ service / on new http:Listener(9090) {
     resource function get stopSql() returns boolean|error {
         return stopSqlServer;
     }
+
 }
 
 isolated function commitHanlder('transaction:Info info) {
@@ -210,6 +223,6 @@ isolated function startServ() returns boolean|error {
 }
 
 isolated function divideByZero() = @java:Method {
-    name: "divideByZero",
-    'class: "a.b.c.Foo"
+                        name: "divideByZero",
+'class: "a.b.c.Foo"
 } external;
